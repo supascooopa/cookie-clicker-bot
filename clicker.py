@@ -23,7 +23,7 @@ while True:
     cookie = driver.find_element(By.ID, "bigCookie")
     cookie.click()
 
-    # TODO 2. click to buy buildings
+    # click to buy buildings
     buildings_list = driver.find_element(By.ID, "products")
     building = buildings_list.find_elements(By.CLASS_NAME, "product")
     for b in building:
@@ -33,5 +33,11 @@ while True:
         # print(building_details)
     cookie.click()
 
-# TODO 3. click to buy upgrades
+    # click to buy upgrades
+    upgrades_list = driver.find_element(By.ID, "upgrades")
+    upgrades = upgrades_list.find_elements(By.CLASS_NAME, "upgrade")
+    for u in upgrades:
+        upgrade_details = u.get_attribute("class")
+        if "enabled" in upgrade_details:
+            u.click()
 # TODO 4. click golden cookies "shimmers"
