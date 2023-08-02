@@ -19,10 +19,19 @@ language_button.click()
 
 # click cookie
 time.sleep(2)
-cookie = driver.find_element(By.ID, "bigCookie")
-cookie.click()
+while True:
+    cookie = driver.find_element(By.ID, "bigCookie")
+    cookie.click()
 
+    # TODO 2. click to buy buildings
+    buildings_list = driver.find_element(By.ID, "products")
+    building = buildings_list.find_elements(By.CLASS_NAME, "product")
+    for b in building:
+        building_details = b.get_attribute("class")
+        if "enabled" in building_details:
+            b.click()
+        # print(building_details)
+    cookie.click()
 
-# TODO 2. click to buy buildings
 # TODO 3. click to buy upgrades
 # TODO 4. click golden cookies "shimmers"
