@@ -1,11 +1,7 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 import time
+from saving import fetching_save_file, importing_save_file
 
 # loading website
 driver = webdriver.Firefox()
@@ -30,6 +26,12 @@ def click_cookie():
     cookie.click()
 
 
+def click_golden_cookie():
+    # click golden cookies
+    if driver.find_element(By.ID, "shimmers").is_displayed():
+        driver.find_element(By.ID, "shimmers").click()
+
+
 def list_products(element_id: str, element_class: str):
     """
 
@@ -49,8 +51,13 @@ consent()
 
 choose_language()
 time.sleep(5)
+
+save_file_text = fetching_save_file()
+importing_save_file(driver, save_file_text)
+
 while True:
 
+    click_golden_cookie()
     click_cookie()
 
     # clicks first upgrade to buy
@@ -71,4 +78,4 @@ while True:
 
     click_cookie()
 
-# TODO 4. click golden cookies "shimmers"
+
