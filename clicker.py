@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 import time
 from saving import fetching_save_file, importing_save_file
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 # loading website
 driver = webdriver.Firefox()
@@ -46,6 +47,15 @@ def list_products(element_id: str, element_class: str):
     return element_table.find_elements(By.CLASS_NAME, element_class)
 
 
+def text_cleaner(text):
+    s_text = text.split(" ")
+    new_text = s_text[7]
+    bad_char = ("(", "%")
+    for c in bad_char:
+        new_text = new_text.replace(c, "")
+    return new_text
+
+
 # wait for webpage to load
 # TODO integrate explicit waits
 time.sleep(5)
@@ -70,12 +80,20 @@ while True:
         if "enabled" in upgrade_details:
             upgrades[0].click()
 
-
     # click to buy buildings
     building = list_products("products", "product")
-    for b in building:
+    for b in building[::-1]:
         building_details = b.get_attribute("class")
         if "enabled" in building_details:
+            hover = ActionChains(driver).move_to_element(b)
+            hover.perform()
+            building_description = driver.find_elements(By.CLASS_NAME, "descriptionBlock")
+            if building_description:
+                # TODO get the percentage number from the building description box and write an algorithm to check if
+                # TODO continued: its closer to 100
+                building_description_text = building_description[1].text
+                text_cleaner(building_description_text)
+
             b.click()
 
 
