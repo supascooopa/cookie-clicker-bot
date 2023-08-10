@@ -2,9 +2,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 from saving import fetching_save_file, importing_save_file
+from selenium.webdriver.support import expected_conditions as EC
 
 # loading website
 driver = webdriver.Firefox()
+driver.maximize_window()
 driver.get("https://orteil.dashnet.org/cookieclicker/")
 
 
@@ -21,14 +23,15 @@ def choose_language():
     language_button.click()
 
 
-def click_cookie():
+def click_cookie(click_amount: int = 1):
     cookie = driver.find_element(By.ID, "bigCookie")
-    cookie.click()
+    for click in range(click_amount):
+        cookie.click()
 
 
 def click_golden_cookie():
     # click golden cookies
-    if driver.find_element(By.ID, "shimmers").is_displayed():
+    if EC.element_to_be_clickable((By.ID, "shimmers")):
         driver.find_element(By.ID, "shimmers").click()
 
 
@@ -57,7 +60,7 @@ importing_save_file(driver, save_file_text)
 
 while True:
 
-    click_golden_cookie()
+    # click_golden_cookie()
     click_cookie()
 
     # clicks first upgrade to buy
@@ -67,7 +70,6 @@ while True:
         if "enabled" in upgrade_details:
             upgrades[0].click()
 
-    click_cookie()
 
     # click to buy buildings
     building = list_products("products", "product")
@@ -76,6 +78,5 @@ while True:
         if "enabled" in building_details:
             b.click()
 
-    click_cookie()
 
 
