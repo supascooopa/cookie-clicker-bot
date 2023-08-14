@@ -33,8 +33,14 @@ def click_cookie(click_amount: int = 1):
 
 def click_golden_cookie():
     # click golden cookies
-    if driver.find_element(By.CLASS_NAME, "goldenCookie").is_displayed():
-        driver.find_element(By.ID, "shimmers").click()
+    shimmer = driver.find_elements(By.CLASS_NAME, "shimmer")
+    if shimmer:
+        for golden in shimmer:
+            golden.click()
+            # try:
+            #     golden.click()
+            # except:
+            #     continue
 
 
 def list_products(element_id: str, element_class: str):
@@ -51,7 +57,11 @@ def list_products(element_id: str, element_class: str):
 def text_cleaner(text):
     # finding text this way is not guranteed, as there are two word buildings in game
     search_obj = re.search(r"\((.+)%", text)
-    percentage_text = search_obj.group(1)
+    try:
+        percentage_text = search_obj.group(1)
+    except AttributeError:
+        percentage_text ="0.0"
+        print(text)
     bad_char = ("(", "%")
     for c in bad_char:
         new_text = percentage_text.replace(c, "")
@@ -73,7 +83,7 @@ importing_save_file(driver, save_file_text)
 while True:
 
     click_golden_cookie()
-    click_cookie()
+    click_cookie(10)
 
     # clicks first upgrade to buy
     upgrades = list_products("upgrades", "upgrade")
@@ -92,16 +102,14 @@ while True:
             hover.perform()
             building_description = driver.find_elements(By.CLASS_NAME, "descriptionBlock")
             if building_description:
-                # TODO get the percentage number from the building description box and write an algorithm to check if
-                # TODO continued: its closer to 100
                 building_description_text = building_description[1].text
-                print(building_description_text)
-                building_profit_per = float(text_cleaner(building_description_text))
-                if building_profit_per > building_to_click[1]:
+                building_profit_per = text_cleaner(building_description_text)
+
+                if building_profit_per >= building_to_click[1]:
                     # PROBLEM WITH THIS APPROACH IS THAT IT WON'T SELECT THE 0 BUILDING
                     building_to_click = (b, building_profit_per)
-
-    building_to_click[0].click()
+    if building_to_click[1] != 0:
+        building_to_click[0].click()
 
 
 
