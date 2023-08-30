@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-from saving import fetching_save_file, importing_save_file
+from saving import fetching_save_file, importing_save_file, exporting_save_file
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from selenium.webdriver.common.action_chains import ActionChains
@@ -77,6 +77,7 @@ consent()
 choose_language()
 time.sleep(5)
 
+exporting_save_file(driver)
 save_file_text = fetching_save_file()
 importing_save_file(driver, save_file_text)
 
@@ -84,32 +85,32 @@ while True:
 
     click_golden_cookie()
     click_cookie(10)
-
-    # clicks first upgrade to buy
-    upgrades = list_products("upgrades", "upgrade")
-    if upgrades:
-        upgrade_details = upgrades[0].get_attribute("class")
-        if "enabled" in upgrade_details:
-            upgrades[0].click()
-
-    # click to buy buildings
-    building = list_products("products", "product")
-    building_to_click = ("", 0)
-    for b in building[::-1]:
-        building_details = b.get_attribute("class")
-        if "enabled" in building_details:
-            hover = ActionChains(driver).move_to_element(b)
-            hover.perform()
-            building_description = driver.find_elements(By.CLASS_NAME, "descriptionBlock")
-            if building_description:
-                building_description_text = building_description[1].text
-                building_profit_per = text_cleaner(building_description_text)
-
-                if building_profit_per >= building_to_click[1]:
-                    # PROBLEM WITH THIS APPROACH IS THAT IT WON'T SELECT THE 0 BUILDING
-                    building_to_click = (b, building_profit_per)
-    if building_to_click[1] != 0:
-        building_to_click[0].click()
+    #
+    # # clicks first upgrade to buy
+    # upgrades = list_products("upgrades", "upgrade")
+    # if upgrades:
+    #     upgrade_details = upgrades[0].get_attribute("class")
+    #     if "enabled" in upgrade_details:
+    #         upgrades[0].click()
+    #
+    # # click to buy buildings
+    # building = list_products("products", "product")
+    # building_to_click = ("", 0)
+    # for b in building[::-1]:
+    #     building_details = b.get_attribute("class")
+    #     if "enabled" in building_details:
+    #         hover = ActionChains(driver).move_to_element(b)
+    #         hover.perform()
+    #         building_description = driver.find_elements(By.CLASS_NAME, "descriptionBlock")
+    #         if building_description:
+    #             building_description_text = building_description[1].text
+    #             building_profit_per = text_cleaner(building_description_text)
+    #
+    #             if building_profit_per >= building_to_click[1]:
+    #                 # PROBLEM WITH THIS APPROACH IS THAT IT WON'T SELECT THE 0 BUILDING
+    #                 building_to_click = (b, building_profit_per)
+    # if building_to_click[1] != 0:
+    #     building_to_click[0].click()
 
 
 
