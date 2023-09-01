@@ -1,4 +1,6 @@
 import glob
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -24,8 +26,10 @@ def exporting_save_file(web_driver):
     subsection = menu.find_element(By.CLASS_NAME, "subsection")
     buttons = subsection.find_elements(By.CSS_SELECTOR, "a")
     buttons[2].click()  # export save button
-    export_text = web_driver.find_element(By.ID, "textareaPrompt").text
-    print(export_text)
+    export_prompt = web_driver.find_element(By.ID, "textareaPrompt")
+    export_text = export_prompt.text
+    export_prompt.send_keys(Keys.ENTER)
+    return export_text
 
 
 # Load save file
