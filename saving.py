@@ -16,15 +16,24 @@ def fetching_save_file():
         with open(list_of_files[0], "r") as save_file:
             return save_file.readlines()[0]
 
-# TODO 2. Create save file
+
+def go_to_options(web_driver):
+    if web_driver.find_element(By.ID, "menu").is_displayed():
+        menu = web_driver.find_element(By.ID, "menu")
+        subsection = menu.find_element(By.CLASS_NAME, "subsection")
+        buttons = subsection.find_elements(By.CSS_SELECTOR, "a")
+        return buttons
+    else:
+        options_button = web_driver.find_element(By.ID, "prefsButton")
+        options_button.click()
+        menu = web_driver.find_element(By.ID, "menu")
+        subsection = menu.find_element(By.CLASS_NAME, "subsection")
+        buttons = subsection.find_elements(By.CSS_SELECTOR, "a")
+        return buttons
 
 
 def exporting_save_file(web_driver):
-    options_button = web_driver.find_element(By.ID, "prefsButton")
-    options_button.click()
-    menu = web_driver.find_element(By.ID, "menu")
-    subsection = menu.find_element(By.CLASS_NAME, "subsection")
-    buttons = subsection.find_elements(By.CSS_SELECTOR, "a")
+    buttons = go_to_options(web_driver)
     buttons[2].click()  # export save button
     export_prompt = web_driver.find_element(By.ID, "textareaPrompt")
     export_text = export_prompt.text
@@ -34,11 +43,7 @@ def exporting_save_file(web_driver):
 
 # Load save file
 def importing_save_file(web_driver, lines):
-    options_button = web_driver.find_element(By.ID, "prefsButton")
-    options_button.click()
-    menu = web_driver.find_element(By.ID, "menu")
-    subsection = menu.find_element(By.CLASS_NAME, "subsection")
-    buttons = subsection.find_elements(By.CSS_SELECTOR, "a")
+    buttons = go_to_options(web_driver)
     buttons[3].click()  # import save button
     import_save = web_driver.find_element(By.ID, "textareaPrompt")
     import_save.send_keys(lines)

@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-from saving import fetching_save_file, importing_save_file, exporting_save_file
+from saving import fetching_save_file, importing_save_file, exporting_save_file, go_to_options
 from selenium.webdriver.support import expected_conditions as EC
 import re
 from selenium.webdriver.common.action_chains import ActionChains
@@ -77,9 +77,11 @@ consent()
 choose_language()
 time.sleep(5)
 
-exporting_save_file(driver)
+
 save_file_text = fetching_save_file()
 importing_save_file(driver, save_file_text)
+time.sleep(1)
+exporting_save_file(driver)
 
 while True:
 
