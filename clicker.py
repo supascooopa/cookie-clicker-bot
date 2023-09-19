@@ -1,10 +1,10 @@
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 import time
-from saving import fetching_save_file, importing_save_file, exporting_save_file, go_to_options
-from selenium.webdriver.support import expected_conditions as EC
+import datetime
+from saving import fetching_save_file, importing_save_file, exporting_save_file, creating_save_file
 import re
-from selenium.webdriver.common.action_chains import ActionChains
 
 # loading website
 driver = webdriver.Firefox()
@@ -28,6 +28,7 @@ def choose_language():
 def click_cookie(click_amount: int = 1):
     cookie = driver.find_element(By.ID, "bigCookie")
     for click in range(click_amount):
+        click_golden_cookie()  # to check for golden cookie if it obscures the big cookie
         cookie.click()
 
 
@@ -81,13 +82,20 @@ time.sleep(5)
 save_file_text = fetching_save_file()
 importing_save_file(driver, save_file_text)
 time.sleep(1)
-exporting_save_file(driver)
 
+back_up_time = 100
 while True:
 
     click_golden_cookie()
     click_cookie(10)
-    #
+    back_up_time -= 1
+    if back_up_time == 0:
+        back_up_save_text = exporting_save_file(driver)
+        hour_and_minute = datetime.datetime.now().strftime("%H-%M-%S")
+        creating_save_file(back_up_save_text, "save file")
+        print(f"updated at {hour_and_minute}")
+        back_up_time = 100
+
     # # clicks first upgrade to buy
     # upgrades = list_products("upgrades", "upgrade")
     # if upgrades:

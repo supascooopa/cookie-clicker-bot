@@ -1,12 +1,10 @@
 import glob
-import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 
-def creating_save_file(save_text):
-    with open("save_file.txt", "w") as save_file:
+def creating_save_file(save_text, file_name):
+    with open("save_file\\" + file_name + ".txt", "w") as save_file:
         save_file.write(save_text)
 
 
@@ -39,7 +37,6 @@ def exporting_save_file(web_driver):
     export_text = export_prompt.text
     export_prompt.send_keys(Keys.ENTER)
     return export_text
-
 
 # Load save file
 def importing_save_file(web_driver, lines):
