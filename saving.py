@@ -31,12 +31,16 @@ def go_to_options(web_driver):
 
 
 def exporting_save_file(web_driver):
+    # TODO CHECK HOW LONG THE LIST OF BUTTONS ARE. THE REASON FOR THIS IS IF GIFTING IS PRESENT THEN THE LIST IS LONGER
+    # TODO CONT. AND IF ITS LONGER THAN THIS FUNCTION WON'T BE ABLE TO EXPORT SAVE FILE
     buttons = go_to_options(web_driver)
-    buttons[2].click()  # export save button
+    # buttons[2].click() # previously used, before finding "present bug"
+    buttons[4].click()  # export save button
     export_prompt = web_driver.find_element(By.ID, "textareaPrompt")
     export_text = export_prompt.text
     export_prompt.send_keys(Keys.ENTER)
     return export_text
+
 
 # Load save file
 def importing_save_file(web_driver, lines):

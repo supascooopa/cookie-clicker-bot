@@ -1,10 +1,11 @@
 from selenium import webdriver
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 import time
 import datetime
 from saving import fetching_save_file, importing_save_file, exporting_save_file, creating_save_file
+from timer import starting_time, back_up_time
 import re
+
 
 # loading website
 driver = webdriver.Firefox()
@@ -38,15 +39,10 @@ def click_golden_cookie():
     if shimmer:
         for golden in shimmer:
             golden.click()
-            # try:
-            #     golden.click()
-            # except:
-            #     continue
 
 
 def list_products(element_id: str, element_class: str):
     """
-
     :param element_id: The larger html element containing the list of upgrades, buildings etc.
     :param element_class:  The element name needed to be extracted from element_id
     :return: a list of class names ei. "product unlocked enabled"
@@ -74,27 +70,28 @@ def text_cleaner(text):
 time.sleep(5)
 
 consent()
-
 choose_language()
-time.sleep(5)
 
+time.sleep(5)
 
 save_file_text = fetching_save_file()
 importing_save_file(driver, save_file_text)
 time.sleep(1)
 
-back_up_time = 100
-while True:
+time_to_backup = 100
+now = datetime.datetime.now()
+backup_timer = back_up_time(now, time_to_backup)
 
-    click_golden_cookie()
+while True:
     click_cookie(10)
-    back_up_time -= 1
-    if back_up_time == 0:
+    current_time = starting_time()
+    if current_time >= backup_timer:
         back_up_save_text = exporting_save_file(driver)
-        hour_and_minute = datetime.datetime.now().strftime("%H-%M-%S")
         creating_save_file(back_up_save_text, "save file")
-        print(f"updated at {hour_and_minute}")
-        back_up_time = 100
+        print(f"updated at {current_time}")
+        backup_timer = back_up_time(datetime.datetime.now(), time_to_backup)
+    # TODO 1.  scroll buildings list and upgrades list into view
+    # TODO 2.ask user for parameters before running the bot to automate building buying and upgrade buying etc.
 
     # # clicks first upgrade to buy
     # upgrades = list_products("upgrades", "upgrade")
